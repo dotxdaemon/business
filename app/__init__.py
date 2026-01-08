@@ -1,2 +1,2 @@
-# ABOUTME: Provides packaging for the niche content desktop app.
-# ABOUTME: Exposes core generator utilities for reuse.
+# ABOUTME: Provides packaging for the cooking product publisher.
+# ABOUTME: Exposes publishing helpers for local dry-run runs.

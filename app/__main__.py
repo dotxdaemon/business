@@ -1,44 +1,28 @@
-# ABOUTME: Runs the niche content pack builder from the command line.
-# ABOUTME: Supports auto-generation or desktop GUI launch.
+# ABOUTME: Runs the cooking pack dry-run publisher from the command line.
+# ABOUTME: Emits local artifacts for markdown, storefront, and payload data.
 from __future__ import annotations
 
 import argparse
 from pathlib import Path
 
-from app.desktop import launch_app
-from app.generator import ContentPackConfig, create_pack
-from app.output import write_pack
-
-
-def _default_config() -> ContentPackConfig:
-    return ContentPackConfig(
-        niche="healthy meal prep",
-        audience="busy parents",
-        keywords=["weekly plan", "grocery list", "freezer meals"],
-        product_type="starter guide",
-    )
-
-
-def _run_auto() -> None:
-    pack = create_pack(_default_config())
-    output_paths = write_pack(Path.cwd(), pack)
-    print(f"Content pack saved to {output_paths.folder}")
+from app.publish import publish_dry_run
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Generate a niche content pack locally.")
+    parser = argparse.ArgumentParser(description="Generate a cooking pack and Gumroad dry-run payload.")
     parser.add_argument(
-        "--auto",
-        action="store_true",
-        help="Generate a pack with default settings and exit.",
+        "--output",
+        type=Path,
+        default=Path.cwd(),
+        help="Output directory for generated files.",
     )
     args = parser.parse_args()
 
-    if args.auto:
-        _run_auto()
-        return
-
-    launch_app()
+    result = publish_dry_run(args.output)
+    print("Dry-run complete.")
+    print(f"Markdown: {result.markdown_path}")
+    print(f"Storefront: {result.storefront_path}")
+    print(f"Payload: {result.payload_path}")
 
 
 if __name__ == "__main__":
